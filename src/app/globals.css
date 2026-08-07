@@ -1,69 +1,184 @@
 @import "tailwindcss";
 
 /*
- * Design tokens (section 8 of the spec).
- * Palette is a STARTING POINT — warm amber/coral accent + neutral gray scale.
- * To reskin the whole site, change the values here only; every page reads
- * these semantic tokens rather than hardcoded colors.
+ * "Robotics Lab Whiteboard" design tokens.
+ *
+ * Tailwind v4 is CSS-first: there is no tailwind.config.ts in this project, so
+ * the palette/typography the spec asks for lives here in @theme and is consumed
+ * as normal utilities (bg-paper, text-ink, border-grid, text-marker, ...).
  */
-:root {
-  /* structure */
-  --background: #ffffff; /* page background */
-  --surface: #f8f8f7; /* cards, raised panels */
-  --foreground: #18181b; /* primary text */
-  --muted: #71717a; /* secondary text */
-  --border: #e4e4e7; /* hairlines, dividers */
+@theme {
+  --color-paper: #fafaf9; /* background */
+  --color-ink: #1c1e21; /* primary text / linework */
+  --color-grid: #c9d6e3; /* faint graph-paper ruling */
+  --color-marker: #ff5a36; /* single accent — CTAs, active states, hover strokes */
+  --color-graphite: #6b7280; /* secondary text, captions, timestamps */
 
-  /* warm accent — "headlights / sunset drive" */
-  --accent: #e0552b;
-  --accent-foreground: #ffffff; /* text/icons on top of accent */
+  /* Card surface: a shade brighter than the paper so cards read as taped-on. */
+  --color-card: #ffffff;
+
+  /* Modal scrim. Deliberately its own token rather than `bg-ink/25`: a scrim has
+     to *darken* the page in both themes, and ink inverts — under dark mode it
+     would become a milky white veil over the content it's supposed to recede. */
+  --color-scrim: rgb(28 30 33 / 0.25);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --surface: #161618;
-    --foreground: #ededed;
-    --muted: #a1a1aa;
-    --border: #27272a;
-
-    --accent: #ff7a4d;
-    --accent-foreground: #1a0a03;
-  }
-}
-
-/* Expose tokens as Tailwind utilities: bg-background, text-muted, border-border, bg-accent, ... */
+/* `inline` so the font utilities resolve to the next/font variables set on <html>. */
 @theme inline {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
 /*
- * Accessibility (section 9): honor prefers-reduced-motion globally.
- * The themed home page opts specific elements back in as needed, but the
- * default is to neutralize animation for users who ask for it.
+ * Dark mode — "the whiteboard after hours". Because every surface in the app
+ * paints from the tokens above, the whole theme is a token swap: there is not a
+ * single `dark:` variant in any component, and anything added later inherits
+ * dark mode for free as long as it uses the tokens.
+ *
+ * `:root[data-theme=...]` rather than a bare `[data-theme=...]`: Tailwind emits
+ * the @theme tokens onto `:root`, which has *identical* specificity to a lone
+ * attribute selector. Qualifying with the element is what guarantees these win
+ * no matter where Tailwind's output lands in the cascade.
+ *
+ * `color-scheme` is set here rather than via the `viewport` export in layout.tsx
+ * because that export is static per-route — it can't follow a runtime toggle.
+ * It gets the scrollbars, form controls, and canvas to match the theme.
+ */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-paper: #14161a; /* background — near-black, faintly blue */
+  --color-ink: #e9e7e4; /* primary text, kept warm to mirror the paper */
+  /* Ruling. Picked by matching the light theme's paper→grid lightness gap
+     (ΔL* ≈ 13) rather than by eye — a mid-blue that looks "subtle" against
+     white reads as a hard lattice against near-black. */
+  --color-grid: #26323f;
+  --color-marker: #ff6b4a; /* nudged lighter — #ff5a36 muddies against black */
+  --color-graphite: #98a1ac;
+
+  /* Cards still read as taped *onto* the surface, so they lift rather than
+     recess — the inverse of the light theme's white-on-off-white. */
+  --color-card: #1c2027;
+
+  /* Leans on pure black and goes heavier: there is far less headroom to dim a
+     near-black page than a white one. */
+  --color-scrim: rgb(0 0 0 / 0.65);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Sticky navbar height + breathing room, so anchor jumps don't tuck headings
+     under the bar. */
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-marker) 22%, transparent);
+}
+
+/*
+ * Keyboard focus is marker-colored everywhere (spec §6): interactive elements
+ * must be visibly focusable, not hover-only.
+ */
+:focus-visible {
+  outline: 2px solid var(--color-marker);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/*
+ * Graph-paper ruling, defined once as a custom property and painted by a single
+ * fixed layer (<GridBackground />) rather than per-section backgrounds.
+ * 24px cell, plus a heavier line every 5th cell like real engineering paper.
+ */
+:root {
+  --grid-cell: 24px;
+  --grid-line: color-mix(in srgb, var(--color-grid) 55%, transparent);
+  --grid-line-major: color-mix(in srgb, var(--color-grid) 85%, transparent);
+  --graph-paper:
+    linear-gradient(to right, var(--grid-line-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-major) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  --graph-paper-size:
+    calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5),
+    calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5), var(--grid-cell)
+    var(--grid-cell), var(--grid-cell) var(--grid-cell);
+}
+
+/* Section rhythm from spec §3: 64–80px mobile, 120–160px desktop (the gap
+   between two sections is the sum of their adjacent padding). */
+.section-rhythm {
+  padding-block: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .section-rhythm {
+    padding-block: 4.5rem;
+  }
+}
+
+/*
+ * Above-the-fold reveal, done in CSS rather than JS so the hero is readable
+ * even if the bundle never arrives — the server-rendered markup animates itself
+ * and `both` fill leaves it at the finished state.
+ */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise-in {
+  animation: rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*
+ * Theme toggle: which glyph (and which screen-reader label) shows is decided by
+ * CSS off the same `data-theme` attribute the inline script sets, so the button
+ * needs no client state. That's what keeps it free of both the wrong-icon flash
+ * and the hydration mismatch that a useState/useEffect version would produce.
+ *
+ * Each icon advertises the destination, not the current theme: moon while light,
+ * sun while dark. `display: none` (rather than opacity) also takes the hidden
+ * label out of the accessibility tree, leaving exactly one accessible name.
+ */
+:root[data-theme="light"] .theme-icon-sun,
+:root[data-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+
+/*
+ * Reduced motion, honored globally (spec §8) — components additionally branch on
+ * useReducedMotion() so they render *finished* states rather than frozen ones.
  */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }

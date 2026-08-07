@@ -1,34 +1,67 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { siteMeta } from "@/content/bio";
+import GridBackground from "@/components/GridBackground";
+import CommandPalette from "@/components/CommandPalette";
+import { themeInitScript } from "@/lib/theme";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Space Grotesk / Inter are variable; Plex Mono needs explicit weights.
+const display = Space_Grotesk({
   subsets: ["latin"],
+  variable: "--font-space-grotesk",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const body = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
 });
 
 export const metadata: Metadata = {
-  title: "Yash Tandon",
-  description:
-    "Portfolio of Yash Tandon — perception and decision systems for autonomous vehicles, AI/ML research, robotics, and software engineering.",
+  metadataBase: new URL(siteMeta.url),
+  title: siteMeta.title,
+  description: siteMeta.description,
+  openGraph: {
+    title: siteMeta.title,
+    description: siteMeta.description,
+    url: siteMeta.url,
+    siteName: siteMeta.title,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteMeta.title,
+    description: siteMeta.description,
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
+    // `data-theme` is the server's best guess; the script below corrects it
+    // during parse. suppressHydrationWarning covers exactly that overwrite —
+    // it applies only to this element's own attributes, not the tree beneath.
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme="light"
+      suppressHydrationWarning
+      className={`${display.variable} ${body.variable} ${mono.variable}`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="min-h-screen antialiased">
+        <GridBackground />
+        {children}
+        <CommandPalette />
+      </body>
     </html>
   );
 }
