@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import { fadeIn, viewportOnce } from "@/lib/motion";
 import { bio } from "@/content/bio";
 import { education } from "@/content/experience";
-import MarkerUnderline from "./MarkerUnderline";
 
 /** Longer bio on the left, the facts a recruiter scans for on the right. */
 export default function AboutBlock() {
@@ -33,6 +32,9 @@ export default function AboutBlock() {
               </dt>
               <dd className="mt-1 text-ink">
                 {entry.title}
+                {entry.title2 && (
+                  <span className="block">{entry.title2}</span>
+                )}
                 <span className="block text-graphite">{entry.org}</span>
                 <span className="block font-mono text-[11px] text-graphite/70">
                   {entry.period}
@@ -43,32 +45,25 @@ export default function AboutBlock() {
 
           <div>
             <dt className="font-mono text-[10px] tracking-[0.18em] text-graphite/80 uppercase">
-              Based in
+              Involved in
             </dt>
-            <dd className="mt-1 text-ink">{bio.location}</dd>
+            <dd className="mt-1 space-y-1.5 text-ink">
+              {bio.involvements.map((entry) => (
+                <div key={entry.org}>
+                  {entry.org}
+                  <span className="block font-mono text-[11px] text-graphite/70">
+                    {entry.role}
+                  </span>
+                </div>
+              ))}
+            </dd>
           </div>
 
           <div>
             <dt className="font-mono text-[10px] tracking-[0.18em] text-graphite/80 uppercase">
-              Elsewhere
+              Based in
             </dt>
-            <dd className="mt-2 flex flex-col gap-2">
-              {bio.links.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative w-fit text-ink"
-                >
-                  <span className="font-mono text-[13px]">{link.label}</span>
-                  <span className="ml-2 font-mono text-[11px] text-graphite/70">
-                    {link.handle}
-                  </span>
-                  <MarkerUnderline />
-                </a>
-              ))}
-            </dd>
+            <dd className="mt-1 text-ink">{bio.location}</dd>
           </div>
         </dl>
       </aside>

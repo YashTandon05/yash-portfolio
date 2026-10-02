@@ -88,7 +88,7 @@ export default function Hero() {
               Email me
               <MarkerUnderline />
             </a>
-            {bio.links.slice(0, 2).map((link) => (
+            {bio.links.map((link) => (
               <a
                 key={link.label}
                 href={link.href}

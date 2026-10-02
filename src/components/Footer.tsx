@@ -14,7 +14,7 @@ export default function Footer() {
           index="06"
           label="Contact"
           id="contact-heading"
-          blurb="The fastest way to reach me is email — I read everything and reply to anything that isn't a mass send."
+          blurb="Working on something similar, curious about the research, or hiring? Reach out. I read everything that lands here."
         />
 
         <a
@@ -23,6 +23,14 @@ export default function Footer() {
         >
           {bio.email}
           <MarkerUnderline className="-bottom-2" />
+        </a>
+
+        <a
+          href={`mailto:${bio.secondaryEmail}`}
+          className="group relative mt-2 block font-mono text-sm text-graphite transition-colors hover:text-ink w-fit"
+        >
+          {bio.secondaryEmail}
+          <MarkerUnderline />
         </a>
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-ink/8 pt-6">

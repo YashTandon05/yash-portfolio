@@ -24,26 +24,29 @@ export interface Publication {
 export const publications: Publication[] = [
   {
     id: "itsc-paper-1",
-    title: "TODO: Paper title",
-    authors: "TODO: A. Author, Yash Tandon, C. Author",
+    title: "When Stopping Fails: Rethinking Minimal Risk Conditions through Human-Interactive Autonomous Driving for Safe Transportation Systems",
+    authors: "Yash Tandon, Giovanni Tapia Lopez, Marcus Blennemann, Mohan Trivedi, Ross Greer",
     venue: "IEEE ITSC",
-    year: "20XX",
+    year: "2026",
     status: "Published",
     plain:
-      "TODO: one sentence a non-specialist understands — what question the paper asks and what you found.",
+      "Looks at real-world cases where autonomous vehicles fail by defaulting to 'stop and wait,' and argues for AVs that can instead read authority, accessibility needs, language, and the social dynamics of city streets.",
     links: [
-      { label: "PDF", href: "#" },
+      { label: "PDF", href: "https://arxiv.org/pdf/2606.29115" },
       { label: "DOI", href: "#" },
     ],
   },
   {
     id: "itsc-paper-2",
-    title: "TODO: Paper title",
-    authors: "TODO: A. Author, Yash Tandon",
+    title: "Vision-Language Work Zone Intelligence for Safety-Critical Speed Regulation of Mixed-Autonomy Vehicles in Dynamic Environments",
+    authors: "Angel Martinez-Sanchez, Kianna Ng, Wesley Maia, Laura Fleig, Maitrayee Keskar, Erika Maquiling, Yash Tandon, Parthib Roy, Mohan Trivedi, Ross Greer",
     venue: "IEEE ITSC",
-    year: "20XX",
+    year: "2026",
     status: "Published",
-    plain: "TODO: one-sentence plain-English summary.",
-    links: [{ label: "PDF", href: "#" }],
+    plain: "Built a real-time, embedded AI perception system that gives autonomous vehicles map-independent, law-aware awareness of temporary work-zone speed limits, combining visual detection, semantic reasoning, and temporal state modeling to achieve 96.5% recall while running on low-cost hardware.",
+    links: [
+      { label: "PDF", href: "https://arxiv.org/pdf/2606.08860" },
+      { label: "DOI", href: "#"}
+    ],
   },
 ];

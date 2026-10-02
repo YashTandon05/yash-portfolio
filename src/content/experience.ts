@@ -6,7 +6,11 @@
 export interface Role {
   /** Job title, or degree for education entries. */
   title: string;
+  /** Optional second degree/title, e.g. for a double major. */
+  title2?: string;
   org: string;
+  /** Optional second org, e.g. a sister lab on another campus. Rendered beneath org. */
+  org2?: string;
   /** e.g. "Jun 2025 — Aug 2025" or "2023 — Present". */
   period: string;
   location?: string;
@@ -19,10 +23,11 @@ export interface Role {
 
 export const experience: Role[] = [
   {
-    title: "TODO: Role title",
-    org: "TODO: Lab / group name",
-    period: "TODO — Present",
-    location: "TODO: City, State",
+    title: "Undergraduate Researcher",
+    org: "Laboratory for Intelligent and Safe Automobiles (CVRRxLISA)",
+    org2: "Machine Intelligence, Interaction, and Imagination Lab (Mi3)",
+    period: "July 2025 — Present",
+    location: "San Diego, CA",
     bullets: [
       "TODO: what you built or researched, and the measurable result.",
       "TODO: a second bullet — scope, scale, or who used it.",
@@ -31,33 +36,57 @@ export const experience: Role[] = [
     stack: ["Python", "PyTorch", "TODO"],
   },
   {
-    title: "TODO: Role title",
-    org: "TODO: Company",
-    period: "TODO — TODO",
-    location: "TODO: City, State",
+    title: "Quantitative Researcher Intern",
+    org: "Astera Holdings",
+    period: "June 2025 — Sep 2025",
+    location: "Remote, US",
     bullets: [
-      "TODO: what you shipped and its impact.",
-      "TODO: a second bullet.",
+      "TODO: what you built or researched, and the measurable result.",
+      "TODO: a second bullet — scope, scale, or who used it.",
+      "TODO: a third bullet only if it says something new.",
     ],
     stack: ["TODO", "TODO"],
   },
   {
-    title: "TODO: Role title",
-    org: "TODO: Organization",
-    period: "TODO — TODO",
-    bullets: ["TODO: what you did and what came of it."],
+    title: "Data Scientist Intern",
+    org: "Data Science Alliance",
+    period: "June 2025 — Aug 2025",
+    location: "San Diego, CA",
+    bullets: [
+      "TODO: what you built or researched, and the measurable result.",
+      "TODO: a second bullet — scope, scale, or who used it.",
+      "TODO: a third bullet only if it says something new.",
+    ],
+    stack: ["TODO", "TODO"],
+  },
+  {
+    title: "Machine Learning Researcher",
+    org: "Data Science Alliance",
+    period: "July 2024 — May 2025",
+    location: "San Diego, CA",
+    bullets: [
+      "TODO: what you built or researched, and the measurable result.",
+      "TODO: a second bullet — scope, scale, or who used it.",
+      "TODO: a third bullet only if it says something new.",
+    ],
+    stack: ["TODO", "TODO"],
   },
 ];
 
 export const education: Role[] = [
   {
-    title: "TODO: B.S. in <major>",
-    org: "TODO: University",
-    period: "TODO — 20XX",
-    location: "TODO: City, State",
+    title: "B.S. in Data Science",
+    title2:
+      "B.S. in Cognitive Science w/ Specialization in Machine Learning and Neural Computation",
+    org: "University of California, San Diego",
+    period: "2023-present (Expected Graduation: June 2027)",
+    location: "San Diego, CA",
     bullets: [
-      "TODO: GPA if it helps you, honors, or relevant coursework.",
-      "TODO: teaching assistantships, clubs, or competition teams.",
+      "GPA: 4.0/4.0",
+      "Institute of Electrical Engineers, RoboCup AI Subteam Lead",
+      "Triton AI Racing, JeepBot Team Engineer",
+      "Recipient of Halıcıoğlu Data Science Institute Undergraduate Research Scholarship",
+      "9x Provost Honours recipient",
     ],
   },
 ];

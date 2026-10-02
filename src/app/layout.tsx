@@ -4,6 +4,7 @@ import "./globals.css";
 import { siteMeta } from "@/content/bio";
 import GridBackground from "@/components/GridBackground";
 import CommandPalette from "@/components/CommandPalette";
+import ChatWidget from "@/components/ChatWidget";
 import { themeInitScript } from "@/lib/theme";
 
 // Space Grotesk / Inter are variable; Plex Mono needs explicit weights.
@@ -60,6 +61,9 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <GridBackground />
         {children}
+        {/* Both are page-agnostic: the assistant answers from the whole site, so
+            it stays reachable from a case-study page too. */}
+        <ChatWidget />
         <CommandPalette />
       </body>
     </html>

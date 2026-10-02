@@ -7,12 +7,14 @@ import ResumeButton from "./ResumeButton";
 import ThemeToggle from "./ThemeToggle";
 import { bio } from "@/content/bio";
 
+// Order must match the page — the active-section logic below picks the
+// furthest-down intersecting entry, which only means "current" if this list is
+// in document order.
 const SECTIONS = [
   { id: "about", label: "About" },
-  { id: "experience", label: "Experience" },
+  { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "publications", label: "Publications" },
-  { id: "skills", label: "Skills" },
   { id: "contact", label: "Contact" },
 ];
 

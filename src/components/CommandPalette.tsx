@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { projects, categoryMeta } from "@/content/projects";
 import { bio } from "@/content/bio";
 import { toggleTheme } from "@/lib/theme";
+import { OPEN_CHAT_EVENT } from "./ChatWidget";
 
 /**
  * ⌘K / Ctrl+K palette: jump to a section, open a case study, grab the resume, or
@@ -49,13 +50,12 @@ export default function CommandPalette() {
   const commands: Command[] = useMemo(() => {
     const sections: Command[] = [
       { id: "about", label: "About" },
-      { id: "experience", label: "Experience" },
-      { id: "projects", label: "Projects" },
-      { id: "ai-ml", label: "Projects — AI / ML" },
-      { id: "robotics", label: "Projects — Robotics" },
-      { id: "swe", label: "Projects — Software Engineering" },
-      { id: "publications", label: "Publications" },
       { id: "skills", label: "Skills" },
+      { id: "projects", label: "Projects" },
+      { id: "ai-ml", label: "Projects · AI / ML" },
+      { id: "robotics", label: "Projects · Robotics" },
+      { id: "swe", label: "Projects · Software Engineering" },
+      { id: "publications", label: "Publications" },
       { id: "contact", label: "Contact" },
     ].map((section) => ({
       id: `section-${section.id}`,
@@ -79,6 +79,15 @@ export default function CommandPalette() {
 
     const actions: Command[] = [
       {
+        id: "chat",
+        label: "Ask the assistant a question",
+        group: "Actions",
+        run: () => {
+          close();
+          window.dispatchEvent(new Event(OPEN_CHAT_EVENT));
+        },
+      },
+      {
         id: "resume",
         label: "Open resume (PDF)",
         group: "Actions",
@@ -97,7 +106,7 @@ export default function CommandPalette() {
       },
       {
         id: "email",
-        label: `Copy email — ${bio.email}`,
+        label: `Copy email · ${bio.email}`,
         group: "Actions",
         run: () => {
           navigator.clipboard?.writeText(bio.email);

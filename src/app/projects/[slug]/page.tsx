@@ -5,6 +5,8 @@ import { projects, getProject, categoryMeta } from "@/content/projects";
 import { siteMeta } from "@/content/bio";
 import ResumeButton from "@/components/ResumeButton";
 import MarkerUnderline from "@/components/MarkerUnderline";
+import ProjectGallery from "@/components/ProjectGallery";
+import LinkKindIcon from "@/components/LinkKindIcon";
 import Footer from "@/components/Footer";
 
 type Params = Promise<{ slug: string }>;
@@ -23,7 +25,7 @@ export async function generateMetadata({
   if (!project) return { title: siteMeta.title };
 
   return {
-    title: `${project.title} — ${siteMeta.title}`,
+    title: `${project.title} | ${siteMeta.title}`,
     description: project.hook,
     openGraph: { title: project.title, description: project.hook },
   };
@@ -81,6 +83,10 @@ export default async function ProjectPage({ params }: { params: Params }) {
               {project.metric}
             </p>
           )}
+
+          {project.media && project.media.length > 0 && (
+            <ProjectGallery media={project.media} title={project.title} />
+          )}
         </header>
 
         {project.description && (
@@ -125,8 +131,9 @@ export default async function ProjectPage({ params }: { params: Params }) {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative font-mono text-[12px] tracking-[0.1em] text-ink uppercase"
+                    className="group relative inline-flex items-center gap-2 font-mono text-[12px] tracking-[0.1em] text-ink uppercase"
                   >
+                    <LinkKindIcon kind={link.kind} className="h-4 w-4 text-marker" />
                     {link.label} ↗
                     <MarkerUnderline />
                   </a>
